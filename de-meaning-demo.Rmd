@@ -1,0 +1,126 @@
+---
+title: "de-meaning"
+output: html_document
+date: "2023-12-18"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+
+```{r}
+
+# Load required libraries
+library(dplyr)
+library(ggplot2)
+
+# Create a demo dataset
+set.seed(123)
+n <- 100  # Number of observations
+
+# Generate age data
+age <- seq(20, 70, length.out = n)
+
+# Generate income data with a quadratic relationship to age
+income <- 1000 - 5 * (age - 45)^2 + rnorm(n, mean = 0, sd = 100)
+
+# Create the demo dataset
+demo_df <- data.frame(age, income)
+
+# lm model 
+lm_model <- lm(income ~ age, data = demo_df)
+summary(lm_model)
+
+# Fit a quadratic regression model
+quad_lm_model <- lm(income ~ age + I(age^2), data = demo_df)
+
+# Summary of the model
+summary(quad_lm_model)
+
+# Visualize the relationship
+ggplot(demo_df, aes(x = age, y = income)) +
+  geom_point() +
+  geom_smooth(method = "lm", formula = y ~ x + I(x^2), se = FALSE) +
+  labs(
+    title = "Quadratic Relationship Between Age and Income",
+    x = "Age",
+    y = "Income"
+  )
+
+```
+
+
+```{r}
+# Center the age variable
+demo_df$centered_age <- demo_df$age - mean(demo_df$age)
+
+# Fit a linear regression model with centered age
+lm_model_centered <- lm(income ~ centered_age + I(centered_age^2), data = demo_df)
+
+# Summary of the centered model
+summary(lm_model_centered)
+```
+Let's denote income as Y and age as X:
+
+Y = -9048.776 + 446.0501X - 4.9506X^2
+
+Now, let's find the derivative of Y with respect to X:
+
+dY/dX = 446.0501 - 9.9012*X
+
+To find the age at which the slope is zero, set dY/dX equal to zero and solve for X:
+
+446.0501 - 9.9012*X = 0
+
+9.9012*X = 446.0501
+
+X = 446.0501 / 9.9012 ≈ 45.00
+
+```{r}
+
+demo_df_l45 <- demo_df %>%
+  filter(age < 45)
+
+
+# Fit a quadratic regression model
+lm_l45_model <- lm(income ~ age , data = demo_df_l45)
+
+# Summary of the model
+summary(lm_l45_model)
+
+# Visualize the relationship
+ggplot(lm_l45_model, aes(x = age, y = income)) +
+  geom_point() +
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE) +
+  labs(
+    title = "Quadratic Relationship Between Age and Income",
+    x = "Age",
+    y = "Income"
+  )
+
+```
+```{r}
+demo_df_g45 <- demo_df %>%
+  filter(age >= 45)
+
+
+# Fit a quadratic regression model
+lm_g45_model <- lm(income ~ age , data = demo_df_g45)
+
+# Summary of the model
+summary(lm_g45_model)
+
+# Visualize the relationship
+ggplot(lm_g45_model, aes(x = age, y = income)) +
+  geom_point() +
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE) +
+  labs(
+    title = "Quadratic Relationship Between Age and Income",
+    x = "Age",
+    y = "Income"
+  )
+```
+
+
