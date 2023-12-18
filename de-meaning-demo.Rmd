@@ -33,6 +33,18 @@ demo_df <- data.frame(age, income)
 lm_model <- lm(income ~ age, data = demo_df)
 summary(lm_model)
 
+
+# Center the age variable
+demo_df$centered_age <- demo_df$age - mean(demo_df$age)
+
+# Fit a linear regression model with centered age
+lm_model_centered <- lm(income ~ centered_age, data = demo_df)
+
+# Summary of the centered model
+summary(lm_model_centered)
+
+
+
 # Fit a quadratic regression model
 quad_lm_model <- lm(income ~ age + I(age^2), data = demo_df)
 
@@ -52,16 +64,7 @@ ggplot(demo_df, aes(x = age, y = income)) +
 ```
 
 
-```{r}
-# Center the age variable
-demo_df$centered_age <- demo_df$age - mean(demo_df$age)
 
-# Fit a linear regression model with centered age
-lm_model_centered <- lm(income ~ centered_age + I(centered_age^2), data = demo_df)
-
-# Summary of the centered model
-summary(lm_model_centered)
-```
 Let's denote income as Y and age as X:
 
 Y = -9048.776 + 446.0501X - 4.9506X^2
