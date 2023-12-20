@@ -43,7 +43,14 @@ lm_model_centered <- lm(income ~ centered_age, data = demo_df)
 # Summary of the centered model
 summary(lm_model_centered)
 
-
+ggplot(demo_df, aes(x = age, y = income)) +
+  geom_point() +
+  geom_smooth(method = "lm", formula = y ~ x , se = FALSE) +
+  labs(
+    title = "Quadratic Relationship Between Age and Income",
+    x = "Age",
+    y = "Income"
+  )
 
 # Fit a quadratic regression model
 quad_lm_model <- lm(income ~ age + I(age^2), data = demo_df)
